@@ -2702,6 +2702,69 @@ details[open] .modal-overlay::after {
   }
 }
 
+/* ===== Midnight Disko Club — Global Theme Vars ===== */
+:root{
+  --mdc-bg-900:#0A0A0E;
+  --mdc-violet:#7B5CFF;
+  --mdc-magenta:#B44CFF;
+  --mdc-ink:#EDEDF7;
+  --mdc-ink-dim:#B7B7C7;
+}
+
+/* Global background + default text */
+body{
+  background: var(--mdc-bg-900);
+  color: var(--mdc-ink);
+}
+
+/* Typography: prefer Inter for UI, Space Grotesk for display */
+.mdc-font-ui,
+.header,
+.header a,
+.list-menu__item--link,
+.button,
+.btn,
+input, select, textarea {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol" !important;
+}
+
+.mdc-font-display,
+.h0, .h1, .h2, .mdc-hero__heading,
+h1, h2, .section-title {
+  font-family: "Space Grotesk", Inter, system-ui, sans-serif !important;
+  font-weight: 700;
+}
+
+/* Links + subtle hover underline with neon fade */
+.list-menu--inline > li > .list-menu__item--link{
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  position:relative;
+}
+.list-menu--inline > li > .list-menu__item--link::after{
+  content:"";
+  position:absolute; left:.2rem; right:.2rem; bottom:.15rem;
+  height:1px; background:linear-gradient(90deg,var(--mdc-violet),var(--mdc-magenta));
+  transform:scaleX(0); transform-origin:left center; transition:transform .18s ease;
+}
+.list-menu--inline > li > .list-menu__item--link:hover::after{ transform:scaleX(1); }
+
+/* Icon tint harmony */
+.header__icon .svg-wrapper svg *,
+.header__social .svg-wrapper svg *{
+  fill: var(--mdc-ink); opacity:.9; transition:opacity .12s ease, filter .12s ease;
+}
+.header__icon:hover .svg-wrapper svg *,
+.header__social .link:hover .svg-wrapper svg *{
+  opacity:1; filter: drop-shadow(0 0 8px rgba(123,92,255,.45));
+}
+
+/* Optional: sticky header subtle divider */
+.shopify-section-header-sticky .header{
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+
+
 @media screen and (min-width: 990px) {
   .search-modal__form {
     max-width: 74.2rem;
