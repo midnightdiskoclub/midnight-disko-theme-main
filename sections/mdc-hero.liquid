@@ -1,1 +1,87 @@
+{% schema %}
+{
+  "name": "MDC — Hero",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "A Club With No Address" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Music • Movement • Everlasting friendships • Euphoric memories" },
+    { "type": "text", "id": "cta_label", "label": "CTA label", "default": "Join the community" },
+    { "type": "url", "id": "cta_link", "label": "CTA link" },
+    { "type": "image_picker", "id": "bg_image", "label": "Background image" },
+    { "type": "checkbox", "id": "dark_overlay", "label": "Dark overlay", "default": true },
+    { "type": "range", "id": "min_height_vh", "label": "Min height (vh)", "min": 60, "max": 100, "step": 5, "default": 90 },
+    { "type": "select", "id": "content_align", "label": "Content alignment", "default": "center", "options": [
+      { "value": "left", "label": "Left" },
+      { "value": "center", "label": "Center" },
+      { "value": "right", "label": "Right" }
+    ] }
+  ],
+  "presets": [{ "name": "MDC — Hero" }]
+}
+{% endschema %}
+
+<section class="mdc-hero" style="min-height: {{ section.settings.min_height_vh }}vh;">
+  {% if section.settings.bg_image != blank %}
+    <div class="mdc-hero__bg">
+      {{ section.settings.bg_image | image_url: width: 2400 | image_tag: class: 'mdc-hero__img', loading: 'eager', fetchpriority: 'high' }}
+    </div>
+  {% endif %}
+  <div class="mdc-hero__overlay {% if section.settings.dark_overlay %}on{% endif %}"></div>
+
+  <div class="page-width mdc-hero__inner mdc-hero__inner--{{ section.settings.content_align }}">
+    <h1 class="mdc-hero__heading">{{ section.settings.heading }}</h1>
+    {% if section.settings.subheading != blank %}
+      <p class="mdc-hero__sub">{{ section.settings.subheading }}</p>
+    {% endif %}
+    {% if section.settings.cta_link != blank %}
+      <a class="mdc-cta" href="{{ section.settings.cta_link }}">{{ section.settings.cta_label }}</a>
+    {% endif %}
+  </div>
+</section>
+
+<style>
+/* Container & background */
+.mdc-hero{ position:relative; display:flex; align-items:center; }
+.mdc-hero__bg{ position:absolute; inset:0; overflow:hidden; }
+.mdc-hero__img{ width:100%; height:100%; object-fit:cover; filter:saturate(110%) contrast(102%); }
+.mdc-hero__overlay{ position:absolute; inset:0; background:transparent; pointer-events:none; }
+.mdc-hero__overlay.on{ background: linear-gradient(to bottom, rgba(10,10,14,.55), rgba(10,10,14,.75)); }
+
+/* Content */
+.mdc-hero__inner{ position:relative; z-index:2; padding: clamp(4rem, 8vw, 8rem) 0; }
+.mdc-hero__inner--center{ text-align:center; margin-left:auto; margin-right:auto; }
+.mdc-hero__inner--left{ text-align:left; margin-right:auto; }
+.mdc-hero__inner--right{ text-align:right; margin-left:auto; }
+
+.mdc-hero__heading{
+  font-family:"Space Grotesk", Inter, system-ui, sans-serif;
+  font-weight:700; letter-spacing:.01em;
+  color:#EDEDF7; margin:0;
+  font-size: clamp(2.4rem, 5vw, 4rem);
+}
+
+.mdc-hero__sub{
+  margin:.8rem 0 1.4rem;
+  max-width: 48rem;
+  color:#EDEDF7; opacity:.9;
+  font-size: clamp(1rem, 2.2vw, 1.25rem);
+}
+
+/* CTA pill */
+.mdc-cta{
+  display:inline-flex; align-items:center; gap:.5rem;
+  padding:.7rem 1.2rem; border-radius:999px; color:#fff; text-decoration:none; font-weight:600;
+  background:
+    radial-gradient(120% 120% at 50% 50%, rgba(123,92,255,.18), rgba(123,92,255,0) 60%),
+    linear-gradient(90deg, #7B5CFF, #B44CFF);
+  box-shadow:0 0 18px rgba(123,92,255,.35);
+  transition:transform .12s ease, box-shadow .12s ease;
+}
+.mdc-cta:hover{ transform:translateY(-1px); box-shadow:0 0 26px rgba(123,92,255,.5); }
+
+/* Respect site-wide colors if you've set them in base.css */
+:root{
+  --mdc-bg-900:#0A0A0E; --mdc-ink:#EDEDF7;
+  --mdc-violet:#7B5CFF; --mdc-magenta:#B44CFF;
+}
+</style>
 
