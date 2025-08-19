@@ -62,6 +62,7 @@
         "subheading": "Music • Movement • Everlasting friendships • Euphoric memories",
         "cta_label": "Join the community",
         "cta_link": "",
+        "bg_image": "shopify://shop_images/Mock_homepage.png",
         "dark_overlay": true,
         "min_height_vh": 90,
         "content_align": "center"
