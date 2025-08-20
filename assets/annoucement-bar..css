@@ -1,0 +1,66 @@
+#mdc-announcement {
+  position: relative;
+  background: var(--mdc-bar-bg);
+  color: var(--mdc-bar-fg);
+  width: 100%;
+  z-index: 9999;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.mdc-announcement--full {
+  margin: 0;
+}
+
+#mdc-announcement .mdc-announcement__track {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 24px;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.mdc-announcement__item {
+  display: none;
+  text-align: center;
+}
+
+.mdc-announcement__item.is-active {
+  display: block;
+}
+
+.mdc-announcement__link,
+.mdc-announcement__text {
+  color: var(--mdc-bar-fg);
+  text-decoration: none;
+}
+
+.mdc-announcement__link:hover {
+  text-decoration: underline;
+}
+
+.mdc-announcement--caps .mdc-announcement__link,
+.mdc-announcement--caps .mdc-announcement__text {
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+.mdc-announcement__close {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  border: 0;
+  background: transparent;
+  color: var(--mdc-bar-fg);
+  font-size: 14px;
+  cursor: pointer;
+  line-height: 1;
+  opacity: .8;
+}
+
+.mdc-announcement__close:hover {
+  opacity: 1;
+}
