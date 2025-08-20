@@ -4,132 +4,109 @@
 {{ 'component-cart-notification.css' | asset_url | stylesheet_tag: preload: true }}
 
 {%- style -%}
-/* ===== Midnight Disko Club Header ===== */
-:root {
-  --hdr-bg: rgba(8,8,12,0.0);          /* transparent on hero */
-  --hdr-bg-solid: rgba(8,8,12,0.88);   /* solid on scroll/not-home */
-  --hdr-border: rgba(255,255,255,0.08);
-  --hdr-blur: saturate(140%) blur(10px);
+/* ===== Midnight Disko Club — Header ===== */
+:root{
+  --mdc-hdr-solid: rgba(8,8,12,.9);
+  --mdc-hdr-border: rgba(255,255,255,.10);
+  --mdc-hdr-link: #fff;
 }
 
-/* Base header shell */
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  width: 100%;
-  transition: background-color .25s ease, backdrop-filter .25s ease, border-color .25s ease;
+/* Shell */
+.site-header{
+  position: sticky; top:0; width:100%; z-index:50;
   border-bottom: 1px solid transparent;
+  transition: background-color .28s ease, border-color .28s ease, backdrop-filter .28s ease;
 }
 
-/* Transparent mode */
-.site-header--transparent {
-  background: var(--hdr-bg);
-  backdrop-filter: var(--hdr-blur);
+/* Transparent over hero */
+.site-header--transparent{
+  background: transparent;
+  backdrop-filter: saturate(140%) blur(10px);
   border-bottom-color: transparent;
 }
 
-/* Solid mode (scrolled or not-home) */
+/* Solid on scroll or when transparency disabled */
 .site-header--solid,
-.site-header.is-scrolled {
-  background: var(--hdr-bg-solid);
-  border-bottom-color: var(--hdr-border);
+.site-header.is-scrolled{
+  background: var(--mdc-hdr-solid);
+  border-bottom-color: var(--mdc-hdr-border);
 }
 
-/* Header inner layout */
-.site-header__inner {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: .75rem;
-  padding: .65rem 1rem;
+/* Layout */
+.site-header__inner{
+  display:grid; grid-template-columns: 1fr auto 1fr;
+  align-items:center; gap:.75rem;
+  padding:.6rem 1rem;
 }
+@media(min-width:990px){ .site-header__inner{ padding:.7rem 1.25rem; }}
 
-@media (min-width: 990px){
-  .site-header__inner { padding: .75rem 1.25rem; }
-}
-
-/* Left: primary nav (desktop) */
-.header-nav {
-  display: none;
-}
-@media (min-width: 990px){
-  .header-nav { display: flex; gap: 1.25rem; align-items: center; }
-  .header-nav a {
-    color: var(--color-foreground, #fff);
-    text-decoration: none;
-    font-weight: 600;
-    letter-spacing: .02em;
-    opacity: .95;
+/* Desktop nav */
+.header-nav{ display:none; }
+@media(min-width:990px){
+  .header-nav{ display:flex; gap:1.1rem; }
+  .header-nav a{
+    color:var(--mdc-hdr-link); text-decoration:none; font-weight:600; letter-spacing:.02em; opacity:.95;
   }
-  .header-nav a:hover { opacity: 1; text-decoration: underline; text-underline-offset: 4px; }
+  .header-nav a:hover{ opacity:1; text-decoration:underline; text-underline-offset:4px; }
 }
 
-/* Center: logo */
-.header-logo {
-  justify-self: center;
-}
-.header-logo img {
-  display: block;
-  height: auto;
-  width: auto;
-  max-height: 48px;
-  max-width: {{ section.settings.logo_max_width | default: 180 }}px;
-  filter: drop-shadow(0 0 18px rgba(158,119,255,.6));
-}
+/* Mobile (hamburger) */
+.header-mobile{ display:flex; align-items:center; gap:.5rem; }
+@media(min-width:990px){ .header-mobile{ display:none; } }
 
-/* Right: actions */
-.header-actions {
-  display: flex; justify-self: end; align-items: center; gap: .75rem;
-}
-
-.header-icon {
+.header-icon{
   display:inline-flex; align-items:center; justify-content:center;
-  width: 40px; height: 40px; border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.08);
-  background: rgba(255,255,255,.02);
-  transition: transform .15s ease, background .2s ease;
+  width:40px; height:40px; border-radius:999px;
+  border:1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.04);
+  color:#fff;
+  transition: transform .15s ease, background .2s ease, opacity .2s ease;
 }
-.header-icon:hover { transform: translateY(-1px); background: rgba(255,255,255,.06); }
+.header-icon:hover{ transform: translateY(-1px); background: rgba(255,255,255,.10); }
 
-.header-count {
-  min-width: 18px; height: 18px; border-radius: 999px;
+/* Logo */
+.header-logo{ justify-self:center; }
+.header-logo img{
+  display:block; height:auto; width:auto;
+  max-height:52px;
+  max-width: {{ section.settings.logo_max_width | default: 200 }}px;
+  filter: drop-shadow(0 0 18px rgba(158,119,255,.65));
+}
+
+/* Actions (right) */
+.header-actions{ display:flex; justify-self:end; align-items:center; gap:.5rem; }
+.header-count{
+  min-width:18px; height:18px; border-radius:999px;
   display:inline-flex; align-items:center; justify-content:center;
-  font-size: 11px; font-weight: 700; margin-left: -8px; margin-top: -10px;
-  background: #fff; color: #0a0a0f; padding: 0 5px; border: 1px solid #0002;
+  font-size:11px; font-weight:700;
+  background:#fff; color:#0a0a0f; padding:0 5px; margin-left:-8px; margin-top:-10px; border:1px solid #0002;
 }
 
-/* Invert (light-on-dark) links when header is transparent over dark hero */
-:root {}
-.header-invert .header-nav a,
-.header-invert .header-icon { color: #fff; }
-.header-invert .header-logo img.logo-light { display: block; }
-.header-invert .header-logo img.logo-dark { display: none; }
+/* Link color override */
+.site-header a{ color:var(--mdc-hdr-link); }
 
-/* When solid (scrolled), switch to dark logo (if provided) */
-.site-header--solid .header-logo img.logo-light,
-.is-scrolled .header-logo img.logo-light { display:none; }
-.site-header--solid .header-logo img.logo-dark,
-.is-scrolled .header-logo img.logo-dark { display:block; }
+/* Logo switching if both light/dark provided */
+.site-header .logo-dark{ display:none; }
+.site-header--solid .logo-light, .is-scrolled .logo-light{ display:none; }
+.site-header--solid .logo-dark,  .is-scrolled .logo-dark{ display:block; }
 
-/* Fallback when only one logo provided */
-.header-logo img:not(.logo-light):not(.logo-dark) { display:block; }
-
-/* Mobile */
-.header-mobile {
-  display:flex; align-items:center; gap:.5rem;
-}
-@media (min-width: 990px){ .header-mobile { display:none; } }
+/* Fallback if only one logo uploaded */
+.header-logo img:not(.logo-light):not(.logo-dark){ display:block; }
 {%- endstyle -%}
 
 <header
   class="site-header
-    {% if request.page_type == 'index' and section.settings.transparent_home %}site-header--transparent header-invert{% else %}site-header--solid{% endif %}"
+    {% if request.page_type == 'index' and section.settings.transparent_home %}
+      site-header--transparent
+    {% else %}
+      site-header--solid
+    {% endif %}"
   data-transparent="{{ section.settings.transparent_home and request.page_type == 'index' }}"
 >
   <div class="site-header__inner page-width">
-    <!-- Left: Nav (Desktop) + Mobile Drawer Button -->
+    <!-- Left: mobile drawer + desktop nav -->
     <div class="header-left">
+      <!-- Mobile -->
       <div class="header-mobile">
         <header-drawer>
           <details>
@@ -142,6 +119,8 @@
           </details>
         </header-drawer>
       </div>
+
+      <!-- Desktop nav -->
       <nav class="header-nav" role="navigation" aria-label="main">
         {% if section.settings.menu != blank %}
           <ul class="list-unstyled" role="list">
@@ -153,25 +132,23 @@
       </nav>
     </div>
 
-    <!-- Center: Logo -->
+    <!-- Center: logo -->
     <div class="header-logo">
       {% if section.settings.logo_light != blank or section.settings.logo_dark != blank %}
         {% if section.settings.logo_light != blank %}
-          <img class="logo-light" src="{{ section.settings.logo_light | image_url: width: 500 }}" alt="{{ shop.name | escape }}">
+          <img class="logo-light" src="{{ section.settings.logo_light | image_url: width: 600 }}" alt="{{ shop.name | escape }}">
         {% endif %}
         {% if section.settings.logo_dark != blank %}
-          <img class="logo-dark" src="{{ section.settings.logo_dark | image_url: width: 500 }}" alt="{{ shop.name | escape }}">
+          <img class="logo-dark" src="{{ section.settings.logo_dark | image_url: width: 600 }}" alt="{{ shop.name | escape }}">
         {% endif %}
+      {% elsif section.settings.logo != blank %}
+        <img src="{{ section.settings.logo | image_url: width: 600 }}" alt="{{ shop.name | escape }}">
       {% else %}
-        {% if section.settings.logo != blank %}
-          <img src="{{ section.settings.logo | image_url: width: 500 }}" alt="{{ shop.name | escape }}">
-        {% else %}
-          <span class="h2">{{ shop.name }}</span>
-        {% endif %}
+        <span class="h2" style="color:#fff; font-weight:800;">{{ shop.name }}</span>
       {% endif %}
     </div>
 
-    <!-- Right: Actions -->
+    <!-- Right: actions -->
     <div class="header-actions">
       {% if section.settings.enable_search %}
         <a class="header-icon" href="{{ routes.search_url }}" aria-label="{{ 'general.search.search' | t }}">
@@ -189,20 +166,22 @@
 </header>
 
 {%- javascript -%}
-/* Toggle solid header on scroll if transparent on home */
+/* Turn header solid after scroll if transparent on home */
 (() => {
   const hdr = document.querySelector('.site-header');
   if (!hdr) return;
-  const transparent = hdr.dataset.transparent === 'true';
 
-  const apply = () => {
-    const scrolled = window.scrollY > ({{ section.settings.scroll_threshold | default: 60 }});
-    if (transparent) {
-      hdr.classList.toggle('is-scrolled', scrolled);
-    }
+  const transparent = hdr.dataset.transparent === 'true';
+  const threshold = Number({{ section.settings.scroll_threshold | default: 80 }});
+
+  const onScroll = () => {
+    if (!transparent) return;
+    const scrolled = window.scrollY > threshold;
+    hdr.classList.toggle('is-scrolled', scrolled);
   };
-  apply();
-  document.addEventListener('scroll', apply, { passive: true });
+
+  onScroll();
+  document.addEventListener('scroll', onScroll, { passive: true });
 })();
 {%- endjavascript -%}
 
@@ -221,29 +200,29 @@
     {
       "type": "range",
       "id": "scroll_threshold",
-      "label": "Scroll threshold to solidify",
-      "min": 20, "max": 150, "step": 5, "default": 80
+      "label": "Scroll threshold to solidify (px)",
+      "min": 20, "max": 160, "step": 5, "default": 80
     },
     {
       "type": "image_picker",
       "id": "logo_light",
-      "label": "Logo (light / neon for dark hero)"
+      "label": "Logo (light/neon for dark hero)"
     },
     {
       "type": "image_picker",
       "id": "logo_dark",
-      "label": "Logo (dark version for solid header)"
+      "label": "Logo (dark/solid for scrolled header)"
     },
     {
       "type": "image_picker",
       "id": "logo",
-      "label": "Fallback logo (if above not used)"
+      "label": "Fallback logo (if only one is needed)"
     },
     {
       "type": "range",
       "id": "logo_max_width",
       "label": "Logo max width (px)",
-      "min": 80, "max": 320, "step": 5, "default": 180
+      "min": 80, "max": 320, "step": 5, "default": 200
     },
     {
       "type": "link_list",
