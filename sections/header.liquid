@@ -1,244 +1,121 @@
-{{ 'component-list-menu.css' | asset_url | stylesheet_tag: preload: true }}
-{{ 'component-search.css' | asset_url | stylesheet_tag: preload: true }}
-{{ 'component-menu-drawer.css' | asset_url | stylesheet_tag: preload: true }}
-{{ 'component-cart-notification.css' | asset_url | stylesheet_tag: preload: true }}
-
-{%- style -%}
-/* ===== Midnight Disko Club — Header ===== */
-:root{
-  --mdc-hdr-solid: rgba(8,8,12,.9);
-  --mdc-hdr-border: rgba(255,255,255,.10);
-  --mdc-hdr-link: #fff;
-}
-
-/* Shell */
-.site-header{
-  position: sticky; top:0; width:100%; z-index:50;
-  border-bottom: 1px solid transparent;
-  transition: background-color .28s ease, border-color .28s ease, backdrop-filter .28s ease;
-}
-
-/* Transparent over hero */
-.site-header--transparent{
-  background: transparent;
-  backdrop-filter: saturate(140%) blur(10px);
-  border-bottom-color: transparent;
-}
-
-/* Solid on scroll or when transparency disabled */
-.site-header--solid,
-.site-header.is-scrolled{
-  background: var(--mdc-hdr-solid);
-  border-bottom-color: var(--mdc-hdr-border);
-}
-
-/* Layout */
-.site-header__inner{
-  display:grid; grid-template-columns: 1fr auto 1fr;
-  align-items:center; gap:.75rem;
-  padding:.6rem 1rem;
-}
-@media(min-width:990px){ .site-header__inner{ padding:.7rem 1.25rem; }}
-
-/* Desktop nav */
-.header-nav{ display:none; }
-@media(min-width:990px){
-  .header-nav{ display:flex; gap:1.1rem; }
-  .header-nav a{
-    color:var(--mdc-hdr-link); text-decoration:none; font-weight:600; letter-spacing:.02em; opacity:.95;
-  }
-  .header-nav a:hover{ opacity:1; text-decoration:underline; text-underline-offset:4px; }
-}
-
-/* Mobile (hamburger) */
-.header-mobile{ display:flex; align-items:center; gap:.5rem; }
-@media(min-width:990px){ .header-mobile{ display:none; } }
-
-.header-icon{
-  display:inline-flex; align-items:center; justify-content:center;
-  width:40px; height:40px; border-radius:999px;
-  border:1px solid rgba(255,255,255,.08);
-  background: rgba(255,255,255,.04);
-  color:#fff;
-  transition: transform .15s ease, background .2s ease, opacity .2s ease;
-}
-.header-icon:hover{ transform: translateY(-1px); background: rgba(255,255,255,.10); }
-
-/* Logo */
-.header-logo{ justify-self:center; }
-.header-logo img{
-  display:block; height:auto; width:auto;
-  max-height:52px;
-  max-width: {{ section.settings.logo_max_width | default: 200 }}px;
-  filter: drop-shadow(0 0 18px rgba(158,119,255,.65));
-}
-
-/* Actions (right) */
-.header-actions{ display:flex; justify-self:end; align-items:center; gap:.5rem; }
-.header-count{
-  min-width:18px; height:18px; border-radius:999px;
-  display:inline-flex; align-items:center; justify-content:center;
-  font-size:11px; font-weight:700;
-  background:#fff; color:#0a0a0f; padding:0 5px; margin-left:-8px; margin-top:-10px; border:1px solid #0002;
-}
-
-/* Link color override */
-.site-header a{ color:var(--mdc-hdr-link); }
-
-/* Logo switching if both light/dark provided */
-.site-header .logo-dark{ display:none; }
-.site-header--solid .logo-light, .is-scrolled .logo-light{ display:none; }
-.site-header--solid .logo-dark,  .is-scrolled .logo-dark{ display:block; }
-
-/* Fallback if only one logo uploaded */
-.header-logo img:not(.logo-light):not(.logo-dark){ display:block; }
-{%- endstyle -%}
+{% comment %}
+  Midnight Disko Club — Header / Navigation
+  - Sticky header
+  - Logo (image or text)
+  - Primary nav (Shopify menu)
+  - CTA: Join the Club
+  - Mobile drawer
+{% endcomment %}
 
 <header
-  class="site-header
-    {% if request.page_type == 'index' and section.settings.transparent_home %}
-      site-header--transparent
-    {% else %}
-      site-header--solid
-    {% endif %}"
-  data-transparent="{{ section.settings.transparent_home and request.page_type == 'index' }}"
+  id="mdc-header"
+  class="mdc-header"
+  style="--mdc-header-bg: {{ section.settings.bg_color }}; --mdc-header-fg: {{ section.settings.text_color }}; --mdc-accent: {{ section.settings.accent_color }};"
+  data-sticky="{{ section.settings.sticky }}"
 >
-  <div class="site-header__inner page-width">
-    <!-- Left: mobile drawer + desktop nav -->
-    <div class="header-left">
-      <!-- Mobile -->
-      <div class="header-mobile">
-        <header-drawer>
-          <details>
-            <summary class="header-icon" aria-label="{{ 'sections.header.menu' | t }}">
-              {% render 'icon-hamburger' %}
-            </summary>
-            <div class="menu-drawer">
-              {% render 'menu-drawer', menu: section.settings.menu %}
-            </div>
-          </details>
-        </header-drawer>
+  <div class="mdc-header__bar">
+    <!-- Mobile: hamburger -->
+    <button class="mdc-header__burger" aria-label="Open menu" aria-expanded="false" aria-controls="mdc-mobile-drawer">
+      <span></span><span></span><span></span>
+    </button>
+
+    <!-- Logo -->
+    <div class="mdc-header__logo">
+      {% if section.settings.logo != blank %}
+        <a href="{{ routes.root_url }}" class="mdc-header__logo-link">
+          <img
+            src="{{ section.settings.logo | image_url: width: 240 }}"
+            srcset="{{ section.settings.logo | image_url: width: 240 }} 1x, {{ section.settings.logo | image_url: width: 480 }} 2x"
+            alt="{{ shop.name }}"
+            width="{{ section.settings.logo.width }}"
+            height="{{ section.settings.logo.height }}"
+            class="mdc-header__logo-img"
+          >
+        </a>
+      {% else %}
+        <a href="{{ routes.root_url }}" class="mdc-header__logo-text">{{ shop.name }}</a>
+      {% endif %}
+    </div>
+
+    <!-- Desktop nav -->
+    <nav class="mdc-header__nav" aria-label="Primary">
+      {% if section.settings.primary_menu != blank %}
+        <ul class="mdc-header__list">
+          {% for link in linklists[section.settings.primary_menu].links %}
+            <li class="mdc-header__item">
+              <a class="mdc-header__link" href="{{ link.url }}">{{ link.title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </nav>
+
+    <!-- CTA -->
+    {% if section.settings.cta_label != blank and section.settings.cta_url != blank %}
+      <a
+        href="{{ section.settings.cta_url }}"
+        class="mdc-header__cta"
+        {% if section.settings.cta_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
+      >
+        {{ section.settings.cta_label }}
+      </a>
+    {% endif %}
+  </div>
+
+  <!-- Mobile drawer -->
+  <div id="mdc-mobile-drawer" class="mdc-drawer" aria-hidden="true">
+    <div class="mdc-drawer__inner">
+      <div class="mdc-drawer__top">
+        <span class="mdc-drawer__title">Menu</span>
+        <button class="mdc-drawer__close" aria-label="Close menu">✕</button>
       </div>
 
-      <!-- Desktop nav -->
-      <nav class="header-nav" role="navigation" aria-label="main">
-        {% if section.settings.menu != blank %}
-          <ul class="list-unstyled" role="list">
-            {% for link in section.settings.menu.links %}
-              <li><a href="{{ link.url }}">{{ link.title }}</a></li>
-            {% endfor %}
-          </ul>
-        {% endif %}
-      </nav>
-    </div>
-
-    <!-- Center: logo -->
-    <div class="header-logo">
-      {% if section.settings.logo_light != blank or section.settings.logo_dark != blank %}
-        {% if section.settings.logo_light != blank %}
-          <img class="logo-light" src="{{ section.settings.logo_light | image_url: width: 600 }}" alt="{{ shop.name | escape }}">
-        {% endif %}
-        {% if section.settings.logo_dark != blank %}
-          <img class="logo-dark" src="{{ section.settings.logo_dark | image_url: width: 600 }}" alt="{{ shop.name | escape }}">
-        {% endif %}
-      {% elsif section.settings.logo != blank %}
-        <img src="{{ section.settings.logo | image_url: width: 600 }}" alt="{{ shop.name | escape }}">
-      {% else %}
-        <span class="h2" style="color:#fff; font-weight:800;">{{ shop.name }}</span>
+      {% if section.settings.primary_menu != blank %}
+        <ul class="mdc-drawer__list">
+          {% for link in linklists[section.settings.primary_menu].links %}
+            <li class="mdc-drawer__item">
+              <a class="mdc-drawer__link" href="{{ link.url }}">{{ link.title }}</a>
+            </li>
+          {% endfor %}
+        </ul>
       {% endif %}
-    </div>
 
-    <!-- Right: actions -->
-    <div class="header-actions">
-      {% if section.settings.enable_search %}
-        <a class="header-icon" href="{{ routes.search_url }}" aria-label="{{ 'general.search.search' | t }}">
-          {% render 'icon-search' %}
+      {% if section.settings.cta_label != blank and section.settings.cta_url != blank %}
+        <a
+          href="{{ section.settings.cta_url }}"
+          class="mdc-drawer__cta"
+          {% if section.settings.cta_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
+        >
+          {{ section.settings.cta_label }}
         </a>
-      {% endif %}
-      <a class="header-icon" href="{{ routes.cart_url }}" aria-label="{{ 'sections.header.cart' | t }}">
-        {% render 'icon-cart' %}
-      </a>
-      {% if cart != empty %}
-        <span class="header-count">{{ cart.item_count }}</span>
       {% endif %}
     </div>
   </div>
+  <div class="mdc-drawer__scrim" hidden></div>
 </header>
-
-{%- javascript -%}
-/* Turn header solid after scroll if transparent on home */
-(() => {
-  const hdr = document.querySelector('.site-header');
-  if (!hdr) return;
-
-  const transparent = hdr.dataset.transparent === 'true';
-  const threshold = Number({{ section.settings.scroll_threshold | default: 80 }});
-
-  const onScroll = () => {
-    if (!transparent) return;
-    const scrolled = window.scrollY > threshold;
-    hdr.classList.toggle('is-scrolled', scrolled);
-  };
-
-  onScroll();
-  document.addEventListener('scroll', onScroll, { passive: true });
-})();
-{%- endjavascript -%}
 
 {% schema %}
 {
-  "name": "Header (Midnight Disko)",
-  "tag": "section",
-  "class": "section-header",
+  "name": "MDC Header",
   "settings": [
-    {
-      "type": "checkbox",
-      "id": "transparent_home",
-      "default": true,
-      "label": "Transparent on homepage (over hero)"
-    },
-    {
-      "type": "range",
-      "id": "scroll_threshold",
-      "label": "Scroll threshold to solidify (px)",
-      "min": 20, "max": 160, "step": 5, "default": 80
-    },
-    {
-      "type": "image_picker",
-      "id": "logo_light",
-      "label": "Logo (light/neon for dark hero)"
-    },
-    {
-      "type": "image_picker",
-      "id": "logo_dark",
-      "label": "Logo (dark/solid for scrolled header)"
-    },
-    {
-      "type": "image_picker",
-      "id": "logo",
-      "label": "Fallback logo (if only one is needed)"
-    },
-    {
-      "type": "range",
-      "id": "logo_max_width",
-      "label": "Logo max width (px)",
-      "min": 80, "max": 320, "step": 5, "default": 200
-    },
+    { "type": "checkbox", "id": "sticky", "label": "Sticky header", "default": true },
+
+    { "type": "image_picker", "id": "logo", "label": "Logo (Neon script mark)" },
+    { "type": "color", "id": "bg_color", "label": "Background color", "default": "#0F0A1F" },
+    { "type": "color", "id": "text_color", "label": "Text color", "default": "#FFFFFF" },
+    { "type": "color", "id": "accent_color", "label": "Accent color (CTA)", "default": "#8B5CF6" },
+
     {
       "type": "link_list",
-      "id": "menu",
-      "label": "Main menu"
+      "id": "primary_menu",
+      "label": "Primary navigation menu"
     },
-    {
-      "type": "checkbox",
-      "id": "enable_search",
-      "default": true,
-      "label": "Show search icon"
-    }
+
+    { "type": "text", "id": "cta_label", "label": "CTA label", "default": "Join the Club" },
+    { "type": "url", "id": "cta_url", "label": "CTA link" },
+    { "type": "checkbox", "id": "cta_new_tab", "label": "Open CTA in new tab", "default": true }
   ],
-  "blocks": [],
-  "presets": [
-    { "name": "Header (Midnight Disko)" }
-  ]
+  "presets": [{ "name": "MDC Header" }]
 }
 {% endschema %}
+ 
