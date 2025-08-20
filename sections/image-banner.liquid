@@ -27,14 +27,6 @@
   #Banner-{{ section.id }}::after {
     opacity: {{ section.settings.image_overlay_opacity | divided_by: 100.0 }};
   }
-  .hero-logo {
-    max-width: 300px;
-    width: 80%;
-    height: auto;
-    display: block;
-    margin: 0 auto 1rem auto;
-    filter: drop-shadow(0 0 20px rgba(158,119,255,.7));
-  }
 {%- endstyle -%}
 
 {%- liquid
@@ -125,15 +117,6 @@
   {%- endif -%}
   <div class="banner__content banner__content--{{ section.settings.desktop_content_position }} page-width{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
     <div class="banner__box content-container content-container--full-width-mobile color-{{ section.settings.color_scheme }} gradient">
-
-      {% if section.settings.hero_logo != blank %}
-        <img
-          src="{{ section.settings.hero_logo | image_url: width: 800 }}"
-          alt="Midnight Disko Club Logo"
-          class="hero-logo"
-        >
-      {% endif %}
-
       {%- for block in section.blocks -%}
         {%- case block.type -%}
           {%- when 'heading' -%}
@@ -192,11 +175,6 @@
     "groups": ["header", "footer"]
   },
   "settings": [
-    {
-      "type": "image_picker",
-      "id": "hero_logo",
-      "label": "Hero Logo"
-    },
     {
       "type": "image_picker",
       "id": "image",
@@ -492,38 +470,4 @@
           "type": "text",
           "id": "button_label_2",
           "default": "t:sections.image-banner.blocks.buttons.settings.button_label_2.default",
-          "label": "t:sections.image-banner.blocks.buttons.settings.button_label_2.label",
-          "info": "t:sections.image-banner.blocks.buttons.settings.button_label_2.info"
-        },
-        {
-          "type": "url",
-          "id": "button_link_2",
-          "label": "t:sections.image-banner.blocks.buttons.settings.button_link_2.label"
-        },
-        {
-          "type": "checkbox",
-          "id": "button_style_secondary_2",
-          "default": false,
-          "label": "t:sections.image-banner.blocks.buttons.settings.button_style_secondary_2.label"
-        }
-      ]
-    }
-  ],
-  "presets": [
-    {
-      "name": "t:sections.image-banner.presets.name",
-      "blocks": [
-        {
-          "type": "heading"
-        },
-        {
-          "type": "text"
-        },
-        {
-          "type": "buttons"
-        }
-      ]
-    }
-  ]
-}
-{% endschema %}
+          "label
