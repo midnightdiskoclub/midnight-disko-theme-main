@@ -10,23 +10,6 @@
 {
   "name": "t:sections.header.name",
   "type": "header",
-  "sections": {
-    "mdc_hero_c3aBga": {
-      "type": "mdc-hero",
-      "name": "MDC — Hero",
-      "settings": {
-        "heading": "A Club With No Address",
-        "subheading": "Music • Movement • Everlasting friendships • Euphoric memories",
-        "cta_label": "Join the community",
-        "cta_link": "",
-        "bg_image": "shopify://shop_images/Mock_homepage.png",
-        "dark_overlay": true,
-        "min_height_vh": 90,
-        "content_align": "center"
-      }
-    }
-  },
-  "order": [
-    "mdc_hero_c3aBga"
-  ]
+  "sections": {},
+  "order": []
 }
